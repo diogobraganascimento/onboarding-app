@@ -21,7 +21,7 @@
 
 <body class="d-flex align-items-center justify-content-center">
 
-    <div class="card-custom w-100" style="max-width: 900px">
+    <div class="card-custom w-100" style="max-width: 950px">
 
         <h1 class="title text-center">
             Registro de Erros - Onboarding
@@ -103,6 +103,14 @@
                             SuperOnboarding
                         </option>
 
+                        <option value="Ambientação">
+                            Ambientação
+                        </option>
+
+                        <option value="Smart Locker">
+                            Smart Locker
+                        </option>
+
                     </select>
 
                 </div>
@@ -149,7 +157,33 @@
                         Área Responsável
                     </label>
 
-                    <input type="text" name="area_responsavel" class="form-control" required />
+                    <select name="area_responsavel" class="form-select" required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="SOC">
+                            SOC
+                        </option>
+
+                        <option value="Gestão de Acessos">
+                            Gestão de Acessos
+                        </option>
+
+                        <option value="RH">
+                            RH
+                        </option>
+
+                        <option value="Estoque">
+                            Estoque
+                        </option>
+
+                        <option value="Redes">
+                            Redes
+                        </option>
+
+                    </select>
 
                 </div>
 
@@ -165,6 +199,54 @@
 
                     <option value="">
                         Selecione um erro
+                    </option>
+                    
+                    <option value="Equipamento avariado">
+                        Equipamento avariado
+                    </option>
+
+                    <option value="Divergência patrimonial">
+                        Divergência patrimonial
+                    </option>
+                    
+                    <option value="SLA reduzido">
+                        SLA reduzido
+                    </option>
+
+                    <option value="Rede limitada">
+                        Rede limitada
+                    </option>
+
+                    <option value="Espaço Físico limitado">
+                        Espaço Físico limitado
+                    </option>
+
+                    <option value="Sem acesso ao E-mail">
+                        Sem acesso ao E-mail
+                    </option>
+
+                    <option value="Erro de Senha">
+                        Erro de Senha
+                    </option>
+
+                    <option value="Reagendamento operacional">
+                        Reagendamento operacional
+                    </option>
+
+                    <option value="Falha provisionamento">
+                        Falha provisionamento
+                    </option>
+
+                    <option value="Fila divergente">
+                        Fila divergente
+                    </option>                
+
+                    <option value="Descumprimento agendamento">
+                        Descumprimento agendamento
+                    </option>
+
+                    <option value="Falha automação">
+                        Falha automação
                     </option>
 
                     {% for erro in erros %}
@@ -192,7 +274,7 @@
 
             </div>
 
-            <div class="d-flex gap-3 flex-wrap">
+            <div class="d-flex gap-3 flex-wrap mb-4">
 
                 <button type="submit" class="btn btn-custom btn-primary-custom">
                     Salvar
@@ -207,6 +289,23 @@
                 </a>
 
             </div>
+
+        </form>
+
+        <hr class="mb-4">
+
+        <h4 class="mb-3 text-white">
+            Importar Planilha Excel
+        </h4>
+
+        <form action="/importar" method="POST" enctype="multipart/form-data"
+            class="d-flex flex-wrap gap-3 align-items-center">
+
+            <input type="file" name="arquivo" accept=".xlsx" class="form-control" style="max-width: 400px" required>
+
+            <button type="submit" class="btn btn-custom btn-success-custom">
+                Importar Excel
+            </button>
 
         </form>
 

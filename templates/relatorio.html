@@ -1,3 +1,5 @@
+<!-- relatorio.html -->
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -5,159 +7,238 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         Relatório de Erros
     </title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        html,
+        body {
+
+            height: 100%;
+
+            overflow: hidden;
+
+            font-family: 'Inter', sans-serif;
+        }
+
+        .page-container {
+
+            height: 100vh;
+
+            overflow: hidden;
+        }
+
+        .table-container {
+
+            height: calc(100vh - 220px);
+
+            overflow: hidden;
+        }
+
+        .table {
+
+            margin-bottom: 0;
+        }
+
+        .card-custom {
+
+            height: 100%;
+        }
+
+        .graficos-container {
+
+            height: 100vh;
+
+            overflow: hidden;
+        }
+
+        .grafico-box {
+
+            height: 48%;
+        }
+
+        canvas {
+
+            max-height: 320px !important;
+        }
+
+        .pagination {
+
+            margin-top: 12px;
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-3 page-container">
 
-        <div class="row g-4">
+        <div class="row g-3 h-100">
 
-            <div class="col-lg-8">
+            <div class="col-lg-8 h-100">
 
-                <div class="card-custom h-100">
+                <div class="card-custom p-4 h-100 d-flex flex-column">
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
 
                         <h2 class="title m-0">
                             Relatório de Erros
                         </h2>
 
-                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <div class="d-flex flex-wrap gap-2">
 
-                            <form method="GET" action="/relatorio" id="filtroForm"
-                                class="d-flex align-items-center gap-2">
+                            <form
+                                method="GET"
+                                id="filtroForm"
+                                class="d-flex flex-wrap gap-2"
+                            >
 
-                                <select name="mes" class="form-select filtro-select"
-                                    onchange="document.getElementById('filtroForm').submit()">
+                                <select
+                                    name="mes"
+                                    class="form-select filtro-select"
+                                    onchange="this.form.submit()"
+                                >
 
                                     <option value="">
                                         Todos os meses
                                     </option>
 
-                                    <option value="01" {% if mes=='01' %}selected{% endif %}>
+                                    <option value="01" {% if mes == '01' %}selected{% endif %}>
                                         Janeiro
                                     </option>
 
-                                    <option value="02" {% if mes=='02' %}selected{% endif %}>
+                                    <option value="02" {% if mes == '02' %}selected{% endif %}>
                                         Fevereiro
                                     </option>
 
-                                    <option value="03" {% if mes=='03' %}selected{% endif %}>
+                                    <option value="03" {% if mes == '03' %}selected{% endif %}>
                                         Março
                                     </option>
 
-                                    <option value="04" {% if mes=='04' %}selected{% endif %}>
+                                    <option value="04" {% if mes == '04' %}selected{% endif %}>
                                         Abril
                                     </option>
 
-                                    <option value="05" {% if mes=='05' %}selected{% endif %}>
+                                    <option value="05" {% if mes == '05' %}selected{% endif %}>
                                         Maio
                                     </option>
 
-                                    <option value="06" {% if mes=='06' %}selected{% endif %}>
+                                    <option value="06" {% if mes == '06' %}selected{% endif %}>
                                         Junho
                                     </option>
 
-                                    <option value="07" {% if mes=='07' %}selected{% endif %}>
+                                    <option value="07" {% if mes == '07' %}selected{% endif %}>
                                         Julho
                                     </option>
 
-                                    <option value="08" {% if mes=='08' %}selected{% endif %}>
+                                    <option value="08" {% if mes == '08' %}selected{% endif %}>
                                         Agosto
                                     </option>
 
-                                    <option value="09" {% if mes=='09' %}selected{% endif %}>
+                                    <option value="09" {% if mes == '09' %}selected{% endif %}>
                                         Setembro
                                     </option>
 
-                                    <option value="10" {% if mes=='10' %}selected{% endif %}>
+                                    <option value="10" {% if mes == '10' %}selected{% endif %}>
                                         Outubro
                                     </option>
 
-                                    <option value="11" {% if mes=='11' %}selected{% endif %}>
+                                    <option value="11" {% if mes == '11' %}selected{% endif %}>
                                         Novembro
                                     </option>
 
-                                    <option value="12" {% if mes=='12' %}selected{% endif %}>
+                                    <option value="12" {% if mes == '12' %}selected{% endif %}>
                                         Dezembro
                                     </option>
 
                                 </select>
 
-                                <select name="site" class="form-select filtro-select"
-                                    onchange="document.getElementById('filtroForm').submit()">
+                                <select
+                                    name="site"
+                                    class="form-select filtro-select"
+                                    onchange="this.form.submit()"
+                                >
 
                                     <option value="">
                                         Todos os sites
                                     </option>
 
-                                    <option value="ION" {% if site=='ION' %}selected{% endif %}>
-                                        ION
+                                    {% for item in lista_sites %}
+
+                                    <option
+                                        value="{{ item }}"
+                                        {% if site == item %}selected{% endif %}
+                                    >
+                                        {{ item }}
                                     </option>
 
-                                    <option value="EG" {% if site=='EG' %}selected{% endif %}>
-                                        EG
+                                    {% endfor %}
+
+                                </select>
+
+                                <select
+                                    name="desvio"
+                                    class="form-select filtro-select"
+                                    onchange="this.form.submit()"
+                                >
+
+                                    <option value="">
+                                        Todos os desvios
                                     </option>
 
-                                    <option value="Citta" {% if site=='Citta' %}selected{% endif %}>
-                                        Citta
+                                    {% for erro in lista_desvios %}
+
+                                    <option
+                                        value="{{ erro }}"
+                                        {% if desvio == erro %}selected{% endif %}
+                                    >
+                                        {{ erro }}
                                     </option>
+
+                                    {% endfor %}
 
                                 </select>
 
                             </form>
 
-                            <form action="/importar" method="POST" enctype="multipart/form-data"
-                                class="d-flex gap-2 align-items-center mb-4">
-
-                                <input type="file" name="arquivo" accept=".xlsx" class="form-control" required>
-
-                                <button type="submit" class="btn btn-success action-btn">
-                                    Importar Excel
-                                </button>
-
-                            </form>
-
-                            <a href="/" class="btn btn-custom btn-dark-custom action-btn">
+                            <a
+                                href="/"
+                                class="btn btn-dark"
+                            >
                                 Voltar
                             </a>
-
-                            <form action="/limpar-dados" method="POST" onsubmit="
-                                    return confirm(
-                                        'Deseja realmente apagar todos os dados?'
-                                    )
-                                ">
-
-                                <!-- button type="submit" class="btn btn-danger action-btn">
-                                    Apagar Dados
-                                </button -->
-
-                            </form>
 
                         </div>
 
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-container flex-grow-1">
 
                         <table class="table table-hover align-middle">
 
@@ -217,19 +298,192 @@
 
                     </div>
 
+                    <nav>
+
+                        <ul class="pagination justify-content-center">
+
+                            {% if pagina > 1 %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?pagina={{ pagina - 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                >
+                                    Anterior
+                                </a>
+
+                            </li>
+
+                            {% endif %}
+
+                            {% for p in range(1, total_paginas + 1) %}
+
+                            <li
+                                class="page-item {% if p == pagina %}active{% endif %}"
+                            >
+
+                                <a
+                                    class="page-link"
+                                    href="?pagina={{ p }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                >
+                                    {{ p }}
+                                </a>
+
+                            </li>
+
+                            {% endfor %}
+
+                            {% if pagina < total_paginas %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?pagina={{ pagina + 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                >
+                                    Próxima
+                                </a>
+
+                            </li>
+
+                            {% endif %}
+
+                        </ul>
+
+                    </nav>
+
                 </div>
 
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4 graficos-container">
 
-                <div class="card-custom h-100">
+                <div class="card-custom p-4 grafico-box mb-3">
 
-                    <h3 class="title text-center mb-4">
-                        Distribuição de Erros
-                    </h3>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
 
-                    <canvas id="graficoPizza"></canvas>
+                        <h3 class="title">
+                            Distribuição de Erros
+                        </h3>
+
+                        <form method="GET">
+
+                            <input
+                                type="hidden"
+                                name="mes"
+                                value="{{ mes }}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="site"
+                                value="{{ site }}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="desvio"
+                                value="{{ desvio }}"
+                            >
+
+                            <select
+                                name="grafico_erros"
+                                class="form-select filtro-select"
+                                onchange="this.form.submit()"
+                            >
+
+                                <option value="bar">
+                                    Barras
+                                </option>
+
+                                <option value="pie">
+                                    Pizza
+                                </option>
+
+                                <option value="line">
+                                    Linha
+                                </option>
+
+                                <option value="radar">
+                                    Radar
+                                </option>
+
+                                <option value="doughnut">
+                                    Rosca
+                                </option>
+
+                            </select>
+
+                        </form>
+
+                    </div>
+
+                    <canvas id="graficoErros"></canvas>
+
+                </div>
+
+                <div class="card-custom p-4 grafico-box">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <h3 class="title">
+                            Áreas
+                        </h3>
+
+                        <form method="GET">
+
+                            <input
+                                type="hidden"
+                                name="mes"
+                                value="{{ mes }}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="site"
+                                value="{{ site }}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="desvio"
+                                value="{{ desvio }}"
+                            >
+
+                            <select
+                                name="grafico_areas"
+                                class="form-select filtro-select"
+                                onchange="this.form.submit()"
+                            >
+
+                                <option value="bar">
+                                    Barras
+                                </option>
+
+                                <option value="pie">
+                                    Pizza
+                                </option>
+
+                                <option value="line">
+                                    Linha
+                                </option>
+
+                                <option value="radar">
+                                    Radar
+                                </option>
+
+                                <option value="doughnut">
+                                    Rosca
+                                </option>
+
+                            </select>
+
+                        </form>
+
+                    </div>
+
+                    <canvas id="graficoAreas"></canvas>
 
                 </div>
 
@@ -241,105 +495,141 @@
 
     <script>
 
-    const ctx = document.getElementById('graficoPizza');
+        new Chart(
+            document.getElementById(
+                'graficoErros'
+            ),
+            {
+                type: '{{ grafico_erros }}',
 
-    new Chart(ctx, {
+                data: {
 
-        type: 'bar',
+                    labels: {{ labels | tojson }},
 
-        data: {
+                    datasets: [{
 
-            labels: {{ labels | tojson }},
+                        label: 'Percentual',
 
-            datasets: [{
+                        data: {{ valores | tojson }},
 
-                label: 'Quantidade de erros',
+                        borderWidth: 1
 
-                data: {{ valores | tojson }},
-
-                borderWidth: 1,
-
-                borderRadius: 8,
-
-            }]
-
-        },
-
-        options: {
-
-            indexAxis: 'y',
-
-            responsive: true,
-
-            maintainAspectRatio: true,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
-
-            },
-
-            scales: {
-
-                x: {
-
-                    ticks: {
-
-                        color: '#FFFFFF',
-
-                        font: {
-
-                            family: 'Inter',
-
-                            size: 12
-
-                        }
-
-                    },
-
-                    grid: {
-
-                        color: 'rgba(255,255,255,0.08)'
-
-                    }
-
+                    }]
                 },
 
-                y: {
+                options: {
 
-                    ticks: {
+                    responsive: true,
 
-                        color: '#FFFFFF',
+                    maintainAspectRatio: false,
 
-                        font: {
+                    plugins: {
 
-                            family: 'Inter',
+                        legend: {
 
-                            size: 12
+                            labels: {
 
+                                color: '#FFFFFF'
+                            }
                         }
-
                     },
 
-                    grid: {
+                    scales: {
 
-                        color: 'rgba(255,255,255,0.05)'
+                        y: {
 
+                            ticks: {
+
+                                color: '#FFFFFF',
+
+                                callback: function(value) {
+
+                                    return value + '%';
+
+                                }
+                            }
+                        },
+
+                        x: {
+
+                            ticks: {
+
+                                color: '#FFFFFF'
+                            }
+                        }
                     }
-
                 }
-
             }
+        );
 
-        }
+        new Chart(
+            document.getElementById(
+                'graficoAreas'
+            ),
+            {
+                type: '{{ grafico_areas }}',
 
-    });
+                data: {
 
-</script>
+                    labels: {{ labels_area | tojson }},
+
+                    datasets: [{
+
+                        label: 'Percentual',
+
+                        data: {{ valores_area_percentual | tojson }},
+
+                        borderWidth: 1
+
+                    }]
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+
+                            labels: {
+
+                                color: '#FFFFFF'
+                            }
+                        }
+                    },
+
+                    scales: {
+
+                        y: {
+
+                            ticks: {
+
+                                color: '#FFFFFF',
+
+                                callback: function(value) {
+
+                                    return value + '%';
+
+                                }
+                            }
+                        },
+
+                        x: {
+
+                            ticks: {
+
+                                color: '#FFFFFF'
+                            }
+                        }
+                    }
+                }
+            }
+        );
+
+    </script>
 
 </body>
 

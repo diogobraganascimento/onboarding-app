@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Relatório de Erros
+    </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container-fluid py-4">
+
+        <div class="row g-4">
+
+            <div class="col-lg-8">
+
+                <div class="card-custom h-100">
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+                        <h2 class="title m-0">
+                            Relatório de Erros
+                        </h2>
+
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+
+                            <form method="GET" action="/relatorio" id="filtroForm"
+                                class="d-flex align-items-center gap-2">
+
+                                <select name="mes" class="form-select filtro-select"
+                                    onchange="document.getElementById('filtroForm').submit()">
+
+                                    <option value="">
+                                        Todos os meses
+                                    </option>
+
+                                    <option value="01" {% if mes=='01' %}selected{% endif %}>
+                                        Janeiro
+                                    </option>
+
+                                    <option value="02" {% if mes=='02' %}selected{% endif %}>
+                                        Fevereiro
+                                    </option>
+
+                                    <option value="03" {% if mes=='03' %}selected{% endif %}>
+                                        Março
+                                    </option>
+
+                                    <option value="04" {% if mes=='04' %}selected{% endif %}>
+                                        Abril
+                                    </option>
+
+                                    <option value="05" {% if mes=='05' %}selected{% endif %}>
+                                        Maio
+                                    </option>
+
+                                    <option value="06" {% if mes=='06' %}selected{% endif %}>
+                                        Junho
+                                    </option>
+
+                                    <option value="07" {% if mes=='07' %}selected{% endif %}>
+                                        Julho
+                                    </option>
+
+                                    <option value="08" {% if mes=='08' %}selected{% endif %}>
+                                        Agosto
+                                    </option>
+
+                                    <option value="09" {% if mes=='09' %}selected{% endif %}>
+                                        Setembro
+                                    </option>
+
+                                    <option value="10" {% if mes=='10' %}selected{% endif %}>
+                                        Outubro
+                                    </option>
+
+                                    <option value="11" {% if mes=='11' %}selected{% endif %}>
+                                        Novembro
+                                    </option>
+
+                                    <option value="12" {% if mes=='12' %}selected{% endif %}>
+                                        Dezembro
+                                    </option>
+
+                                </select>
+
+                                <select name="site" class="form-select filtro-select"
+                                    onchange="document.getElementById('filtroForm').submit()">
+
+                                    <option value="">
+                                        Todos os sites
+                                    </option>
+
+                                    <option value="ION" {% if site=='ION' %}selected{% endif %}>
+                                        ION
+                                    </option>
+
+                                    <option value="EG" {% if site=='EG' %}selected{% endif %}>
+                                        EG
+                                    </option>
+
+                                    <option value="Citta" {% if site=='Citta' %}selected{% endif %}>
+                                        Citta
+                                    </option>
+
+                                </select>
+
+                            </form>
+
+                            <form action="/importar" method="POST" enctype="multipart/form-data"
+                                class="d-flex gap-2 align-items-center mb-4">
+
+                                <input type="file" name="arquivo" accept=".xlsx" class="form-control" required>
+
+                                <button type="submit" class="btn btn-success action-btn">
+                                    Importar Excel
+                                </button>
+
+                            </form>
+
+                            <a href="/" class="btn btn-custom btn-dark-custom action-btn">
+                                Voltar
+                            </a>
+
+                            <form action="/limpar-dados" method="POST" onsubmit="
+                                    return confirm(
+                                        'Deseja realmente apagar todos os dados?'
+                                    )
+                                ">
+
+                                <!-- button type="submit" class="btn btn-danger action-btn">
+                                    Apagar Dados
+                                </button -->
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Data</th>
+
+                                    <th>Site</th>
+
+                                    <th>Número</th>
+
+                                    <th>Origem</th>
+
+                                    <th>Etapa</th>
+
+                                    <th>Área Responsável</th>
+
+                                    <th>Desvio Identificado</th>
+
+                                    <th>Motivo</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in dados %}
+
+                                <tr>
+
+                                    <td>{{ item[0] }}</td>
+
+                                    <td>{{ item[1] }}</td>
+
+                                    <td>{{ item[2] }}</td>
+
+                                    <td>{{ item[3] }}</td>
+
+                                    <td>{{ item[4] }}</td>
+
+                                    <td>{{ item[5] }}</td>
+
+                                    <td>{{ item[6] }}</td>
+
+                                    <td>{{ item[7] }}</td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="card-custom h-100">
+
+                    <h3 class="title text-center mb-4">
+                        Distribuição de Erros
+                    </h3>
+
+                    <canvas id="graficoPizza"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+    const ctx = document.getElementById('graficoPizza');
+
+    new Chart(ctx, {
+
+        type: 'bar',
+
+        data: {
+
+            labels: {{ labels | tojson }},
+
+            datasets: [{
+
+                label: 'Quantidade de erros',
+
+                data: {{ valores | tojson }},
+
+                borderWidth: 1,
+
+                borderRadius: 8,
+
+            }]
+
+        },
+
+        options: {
+
+            indexAxis: 'y',
+
+            responsive: true,
+
+            maintainAspectRatio: true,
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                }
+
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+
+                        color: '#FFFFFF',
+
+                        font: {
+
+                            family: 'Inter',
+
+                            size: 12
+
+                        }
+
+                    },
+
+                    grid: {
+
+                        color: 'rgba(255,255,255,0.08)'
+
+                    }
+
+                },
+
+                y: {
+
+                    ticks: {
+
+                        color: '#FFFFFF',
+
+                        font: {
+
+                            family: 'Inter',
+
+                            size: 12
+
+                        }
+
+                    },
+
+                    grid: {
+
+                        color: 'rgba(255,255,255,0.05)'
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>

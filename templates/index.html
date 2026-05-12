@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Registro de Erros
+    </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+</head>
+
+<body class="d-flex align-items-center justify-content-center">
+
+    <div class="card-custom w-100" style="max-width: 900px">
+
+        <h1 class="title text-center">
+            Registro de Erros - Onboarding
+        </h1>
+
+        <form method="POST" id="formRegistro">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Site
+                    </label>
+
+                    <select name="site" class="form-select" required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="ION">
+                            ION
+                        </option>
+
+                        <option value="Citta">
+                            Citta
+                        </option>
+
+                        <option value="EG">
+                            EG
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Número do Chamado
+                    </label>
+
+                    <input type="text" name="numero" class="form-control" required />
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Data
+                    </label>
+
+                    <input type="date" name="data" class="form-control" required />
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Origem
+                    </label>
+
+                    <select name="origem" class="form-select" required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Onboarding">
+                            Onboarding
+                        </option>
+
+                        <option value="SuperOnboarding">
+                            SuperOnboarding
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Etapa
+                    </label>
+
+                    <select name="etapa" class="form-select" required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Preparação">
+                            Preparação
+                        </option>
+
+                        <option value="Atendimento">
+                            Atendimento
+                        </option>
+
+                        <option value="Agendamento">
+                            Agendamento
+                        </option>
+
+                        <option value="Entrega">
+                            Entrega
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+                        Área Responsável
+                    </label>
+
+                    <input type="text" name="area_responsavel" class="form-control" required />
+
+                </div>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Desvio identificado
+                </label>
+
+                <select name="desvio_identificado" id="desvio_identificado" class="form-select mb-3">
+
+                    <option value="">
+                        Selecione um erro
+                    </option>
+
+                    {% for erro in erros %}
+
+                    <option value="{{ erro[0] }}">
+                        {{ erro[0] }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <input type="text" name="novo_erro" id="novo_erro" class="form-control"
+                    placeholder="Caso o erro não exista, digite um novo" />
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Motivo
+                </label>
+
+                <textarea name="motivo" class="form-control" rows="4" required></textarea>
+
+            </div>
+
+            <div class="d-flex gap-3 flex-wrap">
+
+                <button type="submit" class="btn btn-custom btn-primary-custom">
+                    Salvar
+                </button>
+
+                <a href="/relatorio" class="btn btn-custom btn-dark-custom">
+                    Exibir Relatório
+                </a>
+
+                <a href="/export" class="btn btn-custom btn-success-custom">
+                    Gerar Excel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

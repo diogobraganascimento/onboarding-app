@@ -1,0 +1,227 @@
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b
+    );
+
+    min-height: 100vh;
+
+    padding: 30px;
+}
+
+.card-custom {
+
+    background: rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 24px;
+
+    padding: 40px;
+
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+
+    color: white;
+
+    font-size: 2rem;
+
+    font-weight: 700;
+
+    margin-bottom: 30px;
+}
+
+.form-label {
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+.form-control,
+.form-select {
+
+    background-color: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: white;
+
+    border-radius: 12px;
+
+    padding: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+
+    background-color: rgba(255, 255, 255, 0.12);
+
+    color: white;
+
+    border-color: #3b82f6;
+
+    box-shadow: none;
+}
+
+textarea.form-control {
+    min-height: 140px;
+    resize: none;
+}
+
+.btn-custom {
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 12px 20px;
+
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+.btn-primary-custom {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-dark-custom {
+    background: #111827;
+    color: white;
+}
+
+.btn-success-custom {
+    background: #16a34a;
+    color: white;
+}
+
+.table {
+    color: white;
+}
+
+.table thead {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-content {
+    border-radius: 20px;
+}
+
+/* =========================
+   MODAL CUSTOMIZADO
+========================= */
+
+.modal-content {
+
+    background: rgba(15, 23, 42, 0.98);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+
+    backdrop-filter: blur(15px);
+
+    color: white;
+}
+
+.modal-header {
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-footer {
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-title {
+
+    color: white;
+
+    font-weight: 600;
+}
+
+.modal .form-label {
+
+    color: #e2e8f0;
+}
+
+.modal .form-control {
+
+    background-color: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: white;
+}
+
+.modal .form-control:focus {
+
+    background-color: rgba(255, 255, 255, 0.12);
+
+    color: white;
+
+    border-color: #3b82f6;
+
+    box-shadow: none;
+}
+
+.modal .btn-primary {
+
+    background: #2563eb;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 10px 18px;
+
+    font-weight: 600;
+}
+
+.modal .btn-primary:hover {
+
+    background: #1d4ed8;
+}
+
+/* =========================
+   FILTROS E BOTÕES
+========================= */
+
+.filtro-select {
+
+    width: 140px;
+
+    min-width: 140px;
+
+    height: 45px;
+
+    font-size: 14px;
+}
+
+.action-btn {
+
+    width: 140px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}

@@ -452,7 +452,6 @@ def relatorio():
         grafico_areas=grafico_areas,
     )
 
-
 if __name__ == '__main__':
 
     atualizar_banco()
@@ -462,4 +461,4 @@ if __name__ == '__main__':
         port=5000,
         debug=True,
     )
-    
+

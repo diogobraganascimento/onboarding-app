@@ -9,7 +9,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+               content="width=device-width, initial-scale=1.0"
     >
 
     <title>
@@ -118,6 +118,20 @@
                                 id="filtroForm"
                                 class="d-flex flex-wrap gap-2"
                             >
+
+                                <input
+                                    type="hidden"
+                                    name="grafico_erros"
+                                    id="hiddenGraficoErros"
+                                    value="{{ grafico_erros }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="grafico_areas"
+                                    id="hiddenGraficoAreas"
+                                    value="{{ grafico_areas }}"
+                                >
 
                                 <select
                                     name="mes"
@@ -308,7 +322,7 @@
 
                                 <a
                                     class="page-link"
-                                    href="?pagina={{ pagina - 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                    href="?pagina={{ pagina - 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
                                 >
                                     Anterior
                                 </a>
@@ -325,7 +339,7 @@
 
                                 <a
                                     class="page-link"
-                                    href="?pagina={{ p }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                    href="?pagina={{ p }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
                                 >
                                     {{ p }}
                                 </a>
@@ -340,7 +354,7 @@
 
                                 <a
                                     class="page-link"
-                                    href="?pagina={{ pagina + 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}"
+                                    href="?pagina={{ pagina + 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
                                 >
                                     Próxima
                                 </a>
@@ -367,55 +381,32 @@
                             Distribuição de Erros
                         </h3>
 
-                        <form method="GET">
+                        <select
+                            id="graficoErrosSelect"
+                            class="form-select filtro-select"
+                        >
 
-                            <input
-                                type="hidden"
-                                name="mes"
-                                value="{{ mes }}"
-                            >
+                            <option value="bar" {% if grafico_erros == 'bar' %}selected{% endif %}>
+                                Barras
+                            </option>
 
-                            <input
-                                type="hidden"
-                                name="site"
-                                value="{{ site }}"
-                            >
+                            <option value="pie" {% if grafico_erros == 'pie' %}selected{% endif %}>
+                                Pizza
+                            </option>
 
-                            <input
-                                type="hidden"
-                                name="desvio"
-                                value="{{ desvio }}"
-                            >
+                            <option value="line" {% if grafico_erros == 'line' %}selected{% endif %}>
+                                Linha
+                            </option>
 
-                            <select
-                                name="grafico_erros"
-                                class="form-select filtro-select"
-                                onchange="this.form.submit()"
-                            >
+                            <option value="radar" {% if grafico_erros == 'radar' %}selected{% endif %}>
+                                Radar
+                            </option>
 
-                                <option value="bar">
-                                    Barras
-                                </option>
+                            <option value="doughnut" {% if grafico_erros == 'doughnut' %}selected{% endif %}>
+                                Rosca
+                            </option>
 
-                                <option value="pie">
-                                    Pizza
-                                </option>
-
-                                <option value="line">
-                                    Linha
-                                </option>
-
-                                <option value="radar">
-                                    Radar
-                                </option>
-
-                                <option value="doughnut">
-                                    Rosca
-                                </option>
-
-                            </select>
-
-                        </form>
+                        </select>
 
                     </div>
 
@@ -431,55 +422,32 @@
                             Áreas
                         </h3>
 
-                        <form method="GET">
+                        <select
+                            id="graficoAreasSelect"
+                            class="form-select filtro-select"
+                        >
 
-                            <input
-                                type="hidden"
-                                name="mes"
-                                value="{{ mes }}"
-                            >
+                            <option value="bar" {% if grafico_areas == 'bar' %}selected{% endif %}>
+                                Barras
+                            </option>
 
-                            <input
-                                type="hidden"
-                                name="site"
-                                value="{{ site }}"
-                            >
+                            <option value="pie" {% if grafico_areas == 'pie' %}selected{% endif %}>
+                                Pizza
+                            </option>
 
-                            <input
-                                type="hidden"
-                                name="desvio"
-                                value="{{ desvio }}"
-                            >
+                            <option value="line" {% if grafico_areas == 'line' %}selected{% endif %}>
+                                Linha
+                            </option>
 
-                            <select
-                                name="grafico_areas"
-                                class="form-select filtro-select"
-                                onchange="this.form.submit()"
-                            >
+                            <option value="radar" {% if grafico_areas == 'radar' %}selected{% endif %}>
+                                Radar
+                            </option>
 
-                                <option value="bar">
-                                    Barras
-                                </option>
+                            <option value="doughnut" {% if grafico_areas == 'doughnut' %}selected{% endif %}>
+                                Rosca
+                            </option>
 
-                                <option value="pie">
-                                    Pizza
-                                </option>
-
-                                <option value="line">
-                                    Linha
-                                </option>
-
-                                <option value="radar">
-                                    Radar
-                                </option>
-
-                                <option value="doughnut">
-                                    Rosca
-                                </option>
-
-                            </select>
-
-                        </form>
+                        </select>
 
                     </div>
 
@@ -494,6 +462,46 @@
     </div>
 
     <script>
+
+        const graficoErrosSelect = document.getElementById(
+            'graficoErrosSelect'
+        );
+
+        const graficoAreasSelect = document.getElementById(
+            'graficoAreasSelect'
+        );
+
+        const hiddenGraficoErros = document.getElementById(
+            'hiddenGraficoErros'
+        );
+
+        const hiddenGraficoAreas = document.getElementById(
+            'hiddenGraficoAreas'
+        );
+
+        graficoErrosSelect.addEventListener(
+            'change',
+            function () {
+
+                hiddenGraficoErros.value = this.value;
+
+                document.getElementById(
+                    'filtroForm'
+                ).submit();
+            }
+        );
+
+        graficoAreasSelect.addEventListener(
+            'change',
+            function () {
+
+                hiddenGraficoAreas.value = this.value;
+
+                document.getElementById(
+                    'filtroForm'
+                ).submit();
+            }
+        );
 
         new Chart(
             document.getElementById(

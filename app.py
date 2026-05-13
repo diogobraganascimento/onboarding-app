@@ -452,13 +452,148 @@ def relatorio():
         grafico_areas=grafico_areas,
     )
 
+
+@app.route('/export')
+def exportar_excel():
+    """Exporta relatório em arquivo Excel.
+
+    Keyword arguments:
+    argument -- Nenhum argumento necessário
+    Return: Arquivo Excel para download
+    """
+
+    conn = conectar_banco()
+
+    query = '''
+        SELECT
+            data AS "Data",
+            site AS "Site",
+            numero AS "Número",
+            origem AS "Origem",
+            etapa AS "Etapa",
+            area_responsavel AS "Área Responsável",
+            desvio_identificado AS "Desvio identificado",
+            motivo AS "Motivo"
+        FROM erros
+        ORDER BY data DESC
+    '''
+
+    df = pd.read_sql_query(
+        query,
+        conn,
+    )
+
+    conn.close()
+
+    nome_arquivo = (
+        f'relatorio_erros_'
+        f'{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+    )
+
+    with pd.ExcelWriter(
+        nome_arquivo,
+        engine='openpyxl',
+    ) as writer:
+
+        df.to_excel(
+            writer,
+            index=False,
+            sheet_name='Relatorio',
+        )
+
+    return send_file(
+        nome_arquivo,
+        as_attachment=True,
+    )
+
+
+@app.route('/importar', methods=['POST'])
+def importar_excel():
+    """Importa planilha Excel diretamente para o banco.
+
+    Keyword arguments:
+    argument -- Arquivo enviado via formulário
+    Return: Redirecionamento para relatório
+    """
+
+    arquivo = request.files.get(
+        'arquivo'
+    )
+
+    if not arquivo:
+
+        return redirect(
+            url_for('index')
+        )
+
+    importar_planilha(
+        arquivo
+    )
+
+    return redirect(
+        url_for('relatorio')
+    )
+
+
+def importar_planilha(arquivo):
+    """Importa dados do Excel diretamente para o SQLite.
+
+    Keyword arguments:
+    argument -- Arquivo Excel enviado
+    Return: None
+    """
+
+    df = pd.read_excel(
+        arquivo
+    )
+
+    conn = conectar_banco()
+
+    cursor = conn.cursor()
+
+    for _, linha in df.iterrows():
+
+        data_formatada = pd.to_datetime(
+            linha['Data']
+        ).strftime('%Y-%m-%d')
+
+        cursor.execute(
+            '''
+            INSERT INTO erros (
+                data,
+                site,
+                numero,
+                origem,
+                etapa,
+                area_responsavel,
+                desvio_identificado,
+                motivo
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''',
+            (
+                data_formatada,
+                str(linha['Site']),
+                str(linha['Número']),
+                str(linha['Origem']),
+                str(linha['Etapa']),
+                str(linha['Área Responsável']),
+                str(linha['Desvio identificado']),
+                str(linha['Motivo']),
+            )
+        )
+
+    conn.commit()
+
+    conn.close()
+
+
 if __name__ == '__main__':
 
     atualizar_banco()
 
     app.run(
-        host='0.0.0.0',
+        # host='0.0.0.0',
         port=5000,
         debug=True,
     )
-

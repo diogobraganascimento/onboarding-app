@@ -1,4 +1,4 @@
-<!-- relatorio.html -->
+<!-- templates/relatorio.html -->
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -9,7 +9,7 @@
 
     <meta
         name="viewport"
-               content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <title>
@@ -42,6 +42,8 @@
 
             overflow: hidden;
 
+            background: #0f172a;
+
             font-family: 'Inter', sans-serif;
         }
 
@@ -50,30 +52,91 @@
             height: 100vh;
 
             overflow: hidden;
-        }
 
-        .table-container {
-
-            height: calc(100vh - 220px);
-
-            overflow: hidden;
-        }
-
-        .table {
-
-            margin-bottom: 0;
+            padding: 15px;
         }
 
         .card-custom {
 
+            background: #111827;
+
+            border-radius: 20px;
+
+            padding: 20px;
+
             height: 100%;
+
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .title {
+
+            color: #ffffff;
+
+            font-size: 24px;
+
+            font-weight: 700;
+        }
+
+        .table-container {
+
+            height: calc(100vh - 260px);
+
+            overflow: hidden;
+        }
+
+        table {
+
+            font-size: 13px;
+        }
+
+        thead {
+
+            background: #1f2937;
+
+            color: #ffffff;
+        }
+
+        tbody {
+
+            color: #ffffff;
+        }
+
+        .filtros-container {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+        .filtro-select {
+
+            width: 180px;
+
+            background: #1f2937;
+
+            border: 1px solid #374151;
+
+            color: #ffffff;
         }
 
         .graficos-container {
 
-            height: 100vh;
+            display: flex;
 
-            overflow: hidden;
+            flex-direction: column;
+
+            gap: 15px;
+
+            height: 100%;
         }
 
         .grafico-box {
@@ -83,12 +146,30 @@
 
         canvas {
 
-            max-height: 320px !important;
+            max-height: 300px !important;
         }
 
-        .pagination {
+        @media (max-width: 992px) {
 
-            margin-top: 12px;
+            body {
+
+                overflow-y: auto;
+            }
+
+            .page-container {
+
+                height: auto;
+            }
+
+            .table-container {
+
+                height: auto;
+            }
+
+            .grafico-box {
+
+                height: auto;
+            }
         }
 
     </style>
@@ -97,43 +178,36 @@
 
 <body>
 
-    <div class="container-fluid py-3 page-container">
+    <div class="container-fluid page-container">
 
         <div class="row g-3 h-100">
 
-            <div class="col-lg-8 h-100">
+            <div class="col-lg-8">
 
-                <div class="card-custom p-4 h-100 d-flex flex-column">
+                <div class="card-custom">
 
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
 
-                        <h2 class="title m-0">
+                        <h2 class="title">
                             Relatório de Erros
                         </h2>
 
-                        <div class="d-flex flex-wrap gap-2">
+                        <a
+                            href="/"
+                            class="btn btn-dark"
+                        >
+                            Voltar
+                        </a>
 
-                            <form
-                                method="GET"
-                                id="filtroForm"
-                                class="d-flex flex-wrap gap-2"
-                            >
+                    </div>
 
-                                <input
-                                    type="hidden"
-                                    name="grafico_erros"
-                                    id="hiddenGraficoErros"
-                                    value="{{ grafico_erros }}"
-                                >
+                    <form
+                        method="GET"
+                        id="filtroForm"
+                        class="filtros-container"
+                    >
 
-                                <input
-                                    type="hidden"
-                                    name="grafico_areas"
-                                    id="hiddenGraficoAreas"
-                                    value="{{ grafico_areas }}"
-                                >
-
-                                <select
+                        <select
                                     name="mes"
                                     class="form-select filtro-select"
                                     onchange="this.form.submit()"
@@ -193,66 +267,56 @@
 
                                 </select>
 
-                                <select
-                                    name="site"
-                                    class="form-select filtro-select"
-                                    onchange="this.form.submit()"
-                                >
 
-                                    <option value="">
-                                        Todos os sites
-                                    </option>
+                        <select
+                            name="site"
+                            class="form-select filtro-select"
+                            onchange="this.form.submit()"
+                        >
 
-                                    {% for item in lista_sites %}
+                            <option value="">
+                                Todos os sites
+                            </option>
 
-                                    <option
-                                        value="{{ item }}"
-                                        {% if site == item %}selected{% endif %}
-                                    >
-                                        {{ item }}
-                                    </option>
+                            {% for item in lista_sites %}
 
-                                    {% endfor %}
-
-                                </select>
-
-                                <select
-                                    name="desvio"
-                                    class="form-select filtro-select"
-                                    onchange="this.form.submit()"
-                                >
-
-                                    <option value="">
-                                        Todos os desvios
-                                    </option>
-
-                                    {% for erro in lista_desvios %}
-
-                                    <option
-                                        value="{{ erro }}"
-                                        {% if desvio == erro %}selected{% endif %}
-                                    >
-                                        {{ erro }}
-                                    </option>
-
-                                    {% endfor %}
-
-                                </select>
-
-                            </form>
-
-                            <a
-                                href="/"
-                                class="btn btn-dark"
+                            <option
+                                value="{{ item }}"
+                                {% if site == item %}selected{% endif %}
                             >
-                                Voltar
-                            </a>
+                                {{ item }}
+                            </option>
 
-                        </div>
+                            {% endfor %}
 
-                    </div>
+                        </select>
 
-                    <div class="table-container flex-grow-1">
+                        <select
+                            name="desvio"
+                            class="form-select filtro-select"
+                            onchange="this.form.submit()"
+                        >
+
+                            <option value="">
+                                Todos os desvios
+                            </option>
+
+                            {% for erro in lista_desvios %}
+
+                            <option
+                                value="{{ erro }}"
+                                {% if desvio == erro %}selected{% endif %}
+                            >
+                                {{ erro }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </form>
+
+                    <div class="table-container">
 
                         <table class="table table-hover align-middle">
 
@@ -270,9 +334,9 @@
 
                                     <th>Etapa</th>
 
-                                    <th>Área Responsável</th>
+                                    <th>Área</th>
 
-                                    <th>Desvio Identificado</th>
+                                    <th>Desvio</th>
 
                                     <th>Motivo</th>
 
@@ -312,146 +376,33 @@
 
                     </div>
 
-                    <nav>
-
-                        <ul class="pagination justify-content-center">
-
-                            {% if pagina > 1 %}
-
-                            <li class="page-item">
-
-                                <a
-                                    class="page-link"
-                                    href="?pagina={{ pagina - 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
-                                >
-                                    Anterior
-                                </a>
-
-                            </li>
-
-                            {% endif %}
-
-                            {% for p in range(1, total_paginas + 1) %}
-
-                            <li
-                                class="page-item {% if p == pagina %}active{% endif %}"
-                            >
-
-                                <a
-                                    class="page-link"
-                                    href="?pagina={{ p }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
-                                >
-                                    {{ p }}
-                                </a>
-
-                            </li>
-
-                            {% endfor %}
-
-                            {% if pagina < total_paginas %}
-
-                            <li class="page-item">
-
-                                <a
-                                    class="page-link"
-                                    href="?pagina={{ pagina + 1 }}&mes={{ mes }}&site={{ site }}&desvio={{ desvio }}&grafico_erros={{ grafico_erros }}&grafico_areas={{ grafico_areas }}"
-                                >
-                                    Próxima
-                                </a>
-
-                            </li>
-
-                            {% endif %}
-
-                        </ul>
-
-                    </nav>
-
                 </div>
 
             </div>
 
-            <div class="col-lg-4 graficos-container">
+            <div class="col-lg-4">
 
-                <div class="card-custom p-4 grafico-box mb-3">
+                <div class="graficos-container">
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="card-custom grafico-box">
 
-                        <h3 class="title">
+                        <h3 class="title text-center mb-3">
                             Distribuição de Erros
                         </h3>
 
-                        <select
-                            id="graficoErrosSelect"
-                            class="form-select filtro-select"
-                        >
-
-                            <option value="bar" {% if grafico_erros == 'bar' %}selected{% endif %}>
-                                Barras
-                            </option>
-
-                            <option value="pie" {% if grafico_erros == 'pie' %}selected{% endif %}>
-                                Pizza
-                            </option>
-
-                            <option value="line" {% if grafico_erros == 'line' %}selected{% endif %}>
-                                Linha
-                            </option>
-
-                            <option value="radar" {% if grafico_erros == 'radar' %}selected{% endif %}>
-                                Radar
-                            </option>
-
-                            <option value="doughnut" {% if grafico_erros == 'doughnut' %}selected{% endif %}>
-                                Rosca
-                            </option>
-
-                        </select>
+                        <canvas id="graficoErros"></canvas>
 
                     </div>
 
-                    <canvas id="graficoErros"></canvas>
+                    <div class="card-custom grafico-box">
 
-                </div>
-
-                <div class="card-custom p-4 grafico-box">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-
-                        <h3 class="title">
+                        <h3 class="title text-center mb-3">
                             Áreas
                         </h3>
 
-                        <select
-                            id="graficoAreasSelect"
-                            class="form-select filtro-select"
-                        >
-
-                            <option value="bar" {% if grafico_areas == 'bar' %}selected{% endif %}>
-                                Barras
-                            </option>
-
-                            <option value="pie" {% if grafico_areas == 'pie' %}selected{% endif %}>
-                                Pizza
-                            </option>
-
-                            <option value="line" {% if grafico_areas == 'line' %}selected{% endif %}>
-                                Linha
-                            </option>
-
-                            <option value="radar" {% if grafico_areas == 'radar' %}selected{% endif %}>
-                                Radar
-                            </option>
-
-                            <option value="doughnut" {% if grafico_areas == 'doughnut' %}selected{% endif %}>
-                                Rosca
-                            </option>
-
-                        </select>
+                        <canvas id="graficoAreas"></canvas>
 
                     </div>
-
-                    <canvas id="graficoAreas"></canvas>
 
                 </div>
 
@@ -463,50 +414,8 @@
 
     <script>
 
-        const graficoErrosSelect = document.getElementById(
-            'graficoErrosSelect'
-        );
-
-        const graficoAreasSelect = document.getElementById(
-            'graficoAreasSelect'
-        );
-
-        const hiddenGraficoErros = document.getElementById(
-            'hiddenGraficoErros'
-        );
-
-        const hiddenGraficoAreas = document.getElementById(
-            'hiddenGraficoAreas'
-        );
-
-        graficoErrosSelect.addEventListener(
-            'change',
-            function () {
-
-                hiddenGraficoErros.value = this.value;
-
-                document.getElementById(
-                    'filtroForm'
-                ).submit();
-            }
-        );
-
-        graficoAreasSelect.addEventListener(
-            'change',
-            function () {
-
-                hiddenGraficoAreas.value = this.value;
-
-                document.getElementById(
-                    'filtroForm'
-                ).submit();
-            }
-        );
-
         new Chart(
-            document.getElementById(
-                'graficoErros'
-            ),
+            document.getElementById('graficoErros'),
             {
                 type: '{{ grafico_erros }}',
 
@@ -515,8 +424,6 @@
                     labels: {{ labels | tojson }},
 
                     datasets: [{
-
-                        label: 'Percentual',
 
                         data: {{ valores | tojson }},
 
@@ -537,32 +444,7 @@
 
                             labels: {
 
-                                color: '#FFFFFF'
-                            }
-                        }
-                    },
-
-                    scales: {
-
-                        y: {
-
-                            ticks: {
-
-                                color: '#FFFFFF',
-
-                                callback: function(value) {
-
-                                    return value + '%';
-
-                                }
-                            }
-                        },
-
-                        x: {
-
-                            ticks: {
-
-                                color: '#FFFFFF'
+                                color: '#ffffff'
                             }
                         }
                     }
@@ -571,9 +453,7 @@
         );
 
         new Chart(
-            document.getElementById(
-                'graficoAreas'
-            ),
+            document.getElementById('graficoAreas'),
             {
                 type: '{{ grafico_areas }}',
 
@@ -582,8 +462,6 @@
                     labels: {{ labels_area | tojson }},
 
                     datasets: [{
-
-                        label: 'Percentual',
 
                         data: {{ valores_area_percentual | tojson }},
 
@@ -604,32 +482,7 @@
 
                             labels: {
 
-                                color: '#FFFFFF'
-                            }
-                        }
-                    },
-
-                    scales: {
-
-                        y: {
-
-                            ticks: {
-
-                                color: '#FFFFFF',
-
-                                callback: function(value) {
-
-                                    return value + '%';
-
-                                }
-                            }
-                        },
-
-                        x: {
-
-                            ticks: {
-
-                                color: '#FFFFFF'
+                                color: '#ffffff'
                             }
                         }
                     }

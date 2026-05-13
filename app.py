@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from pathlib import Path
-import math
+from math import ceil
 import os
 import sqlite3
 
@@ -216,12 +216,24 @@ def index():
 
 @app.route('/relatorio')
 def relatorio():
-    """sumary_line
+    """Exibe relatório completo do banco de dados.
 
     Keyword arguments:
-    argument -- filtros relatório
-    Return: template relatorio.html
+    argument -- Filtros da página
+    Return: Template HTML renderizado
     """
+
+    mes = request.args.get(
+        'mes'
+    )
+
+    site = request.args.get(
+        'site'
+    )
+
+    desvio = request.args.get(
+        'desvio'
+    )
 
     pagina = request.args.get(
         'pagina',
@@ -229,18 +241,14 @@ def relatorio():
         type=int
     )
 
-    mes = request.args.get('mes', '')
+    registros_por_pagina = 25
 
-    site = request.args.get('site', '')
-
-    desvio = request.args.get('desvio', '')
-
-    grafico_erros = request.args.get(
+    tipo_grafico_erros = request.args.get(
         'grafico_erros',
         'bar'
     )
 
-    grafico_areas = request.args.get(
+    tipo_grafico_areas = request.args.get(
         'grafico_areas',
         'bar'
     )
@@ -262,7 +270,9 @@ def relatorio():
             AND strftime('%m', data) = ?
         '''
 
-        params.append(mes)
+        params.append(
+            mes
+        )
 
     if site:
 
@@ -270,7 +280,9 @@ def relatorio():
             AND site = ?
         '''
 
-        params.append(site)
+        params.append(
+            site
+        )
 
     if desvio:
 
@@ -278,25 +290,28 @@ def relatorio():
             AND desvio_identificado = ?
         '''
 
-        params.append(desvio)
+        params.append(
+            desvio
+        )
 
     cursor.execute(
         f'''
         SELECT COUNT(*)
         {query_base}
         ''',
-        params,
+        params
     )
 
     total_registros = cursor.fetchone()[0]
 
-    total_paginas = math.ceil(
-        total_registros / REGISTROS_POR_PAGINA
+    total_paginas = ceil(
+        total_registros / registros_por_pagina
     )
 
     offset = (
-        pagina - 1
-    ) * REGISTROS_POR_PAGINA
+        (pagina - 1)
+        * registros_por_pagina
+    )
 
     query_dados = f'''
         SELECT
@@ -314,48 +329,43 @@ def relatorio():
     '''
 
     params_dados = (
-        params +
-        [
-            REGISTROS_POR_PAGINA,
-            offset,
+        params
+        + [
+            registros_por_pagina,
+            offset
         ]
     )
 
     cursor.execute(
         query_dados,
-        params_dados,
+        params_dados
     )
 
     dados = cursor.fetchall()
 
-    query_erros = f'''
+    cursor.execute(
+        '''
         SELECT
             desvio_identificado,
             COUNT(*) as total
-        {query_base}
+        FROM erros
         GROUP BY desvio_identificado
         ORDER BY total DESC
-    '''
-
-    cursor.execute(
-        query_erros,
-        params,
+        '''
     )
 
-    grafico_erros_dados = cursor.fetchall()
-
-    labels = []
-
-    valores = []
+    grafico_erros = cursor.fetchall()
 
     total_erros = sum(
         item[1]
-        for item in grafico_erros_dados
+        for item in grafico_erros
     )
 
-    for item in grafico_erros_dados:
+    labels_erros = []
 
-        labels.append(item[0])
+    valores_erros = []
+
+    for item in grafico_erros:
 
         percentual = round(
             (
@@ -364,36 +374,37 @@ def relatorio():
             1
         ) if total_erros > 0 else 0
 
-        valores.append(percentual)
+        labels_erros.append(
+            item[0]
+        )
 
-    query_areas = f'''
+        valores_erros.append(
+            percentual
+        )
+
+    cursor.execute(
+        '''
         SELECT
             area_responsavel,
             COUNT(*) as total
-        {query_base}
+        FROM erros
         GROUP BY area_responsavel
         ORDER BY total DESC
-    '''
-
-    cursor.execute(
-        query_areas,
-        params,
+        '''
     )
 
-    grafico_areas_dados = cursor.fetchall()
-
-    labels_area = []
-
-    valores_area_percentual = []
+    grafico_areas = cursor.fetchall()
 
     total_areas = sum(
         item[1]
-        for item in grafico_areas_dados
+        for item in grafico_areas
     )
 
-    for item in grafico_areas_dados:
+    labels_areas = []
 
-        labels_area.append(item[0])
+    valores_areas = []
+
+    for item in grafico_areas:
 
         percentual = round(
             (
@@ -402,56 +413,43 @@ def relatorio():
             1
         ) if total_areas > 0 else 0
 
-        valores_area_percentual.append(
+        labels_areas.append(
+            item[0]
+        )
+
+        valores_areas.append(
             percentual
         )
 
     cursor.execute(
         '''
-        SELECT DISTINCT site
-        FROM erros
-        ORDER BY site ASC
-        '''
-    )
-
-    lista_sites = [
-        item[0]
-        for item in cursor.fetchall()
-    ]
-
-    cursor.execute(
-        '''
-        SELECT DISTINCT desvio_identificado
+        SELECT DISTINCT
+            desvio_identificado
         FROM erros
         ORDER BY desvio_identificado ASC
         '''
     )
 
-    lista_desvios = [
-        item[0]
-        for item in cursor.fetchall()
-    ]
+    lista_desvios = cursor.fetchall()
 
     conn.close()
 
     return render_template(
         'relatorio.html',
         dados=dados,
-        labels=labels,
-        valores=valores,
-        labels_area=labels_area,
-        valores_area_percentual=valores_area_percentual,
-        lista_sites=lista_sites,
+        labels_erros=labels_erros,
+        valores_erros=valores_erros,
+        labels_areas=labels_areas,
+        valores_areas=valores_areas,
         lista_desvios=lista_desvios,
-        pagina=pagina,
-        total_paginas=total_paginas,
+        tipo_grafico_erros=tipo_grafico_erros,
+        tipo_grafico_areas=tipo_grafico_areas,
         mes=mes,
         site=site,
         desvio=desvio,
-        grafico_erros=grafico_erros,
-        grafico_areas=grafico_areas,
+        pagina=pagina,
+        total_paginas=total_paginas,
     )
-
 
 @app.route('/export')
 def exportar_excel():
